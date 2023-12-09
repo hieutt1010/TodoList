@@ -1,0 +1,9 @@
+@import "../node_modules/ng-zorro-antd/ng-zorro-antd.min.css";
+
+html,body{
+  height: fit-content;
+}
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

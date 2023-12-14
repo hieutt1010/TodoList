@@ -1,9 +1,9 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Interfaces;
 using TodoApi.Models;
 using TodoApi.Models.DTO;
-using TodoApi.Services;
 
 namespace TodoApi.Controllers
 {
@@ -116,6 +116,11 @@ namespace TodoApi.Controllers
                 return NotFound();
             }
             return NoContent();
+        }
+        [HttpGet("search/{searchString}")]
+        public async Task<List<TodoItemDTO>> Search(string searchString)
+        {
+            return await _todolist.SearchTodoItem(searchString);
         }
     }
 }

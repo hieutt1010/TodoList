@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using TodoApi.Configurations;
@@ -65,6 +66,14 @@ namespace TodoApi.Services
                 IsComplete = todoItem.IsComplete
             };
 
+        public async Task<List<TodoItemDTO>> SearchTodoItem(string search)
+        {
+            var tmp = await _todoItemsCollection.Find(todoList => todoList.Description
+                .Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                .SortByDescending(todo => todo.CreateAt)
+                .ToListAsync();
 
+            return tmp.Select(x => ItemToDTO(x)).ToList();
+        }
     }
 }

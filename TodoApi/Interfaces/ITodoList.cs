@@ -11,6 +11,7 @@ namespace TodoApi.Interfaces
         Task UpdateAsync(TodoItem updateTodoItem);
         Task UpdateAsync(string id, bool IsComplete);
         Task RemoveAsync(string id);
+        Task<List<TodoItemDTO>> SearchTodoItem(string search);
         TodoItemDTO ItemToDTO(TodoItem todoItem);
     }
 }

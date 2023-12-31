@@ -10,18 +10,7 @@ export interface Toast {
 export class ToastService {
   toasts: Toast[] = [];
 
-  show(toast: Toast) {
-    this.toasts.push(toast);
-  }
-  remove(toast: Toast) {
-    this.toasts = this.toasts.filter((t) => t != toast);
-  }
-
-  clear() {
-    this.toasts.splice(0, this.toasts.length);
-  }
-
-  showSuccess(template: TemplateRef<any>) {
+  showCreatedSuccess(template: TemplateRef<any>) {
     this.show({
       template,
       classname: 'bg-success text-light',
@@ -29,12 +18,24 @@ export class ToastService {
     });
   }
 
-  showDanger(template: TemplateRef<any>) {
+  showDeletedSuccess(template: TemplateRef<any>) {
     this.show({
       template,
       classname: 'bg-danger text-light',
       delay: 1500,
     });
+  }
+
+  show(toast: Toast) {
+    this.toasts.push(toast);
+  }
+
+  remove(toast: Toast) {
+    this.toasts = this.toasts.filter((t) => t !== toast);
+  }
+
+  clear() {
+    this.toasts.splice(0, this.toasts.length);
   }
 
   ngOnDestroy(): void {

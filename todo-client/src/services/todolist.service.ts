@@ -2,23 +2,16 @@ import { Injectable } from '@angular/core';
 import { Todo } from '../app/models/todo';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { ApiUrlTodoItems } from '../app/models/commonVariable';
+import { httpOptions } from '../app/models/commonVariable';
 @Injectable({
   providedIn: 'root',
 })
 export class TodolistService {
   constructor(private http: HttpClient) {}
 
-  apiUrl = 'https://localhost:7219/api/TodoItems';
-
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Allow-Methods': '*',
-    }),
-  };
+  apiUrl = ApiUrlTodoItems;
+  httpOptions = httpOptions;
 
   getTodoList(): Observable<Todo[]> {
     return this.http.get<Todo[]>(`${this.apiUrl}`);
@@ -34,35 +27,30 @@ export class TodolistService {
     return this.http.post<Todo>(`${this.apiUrl}`, todo, this.httpOptions);
   }
 
-  modifyTodoItem(todo: Todo): void {
-    this.http
-      .put<Todo>(`${this.apiUrl}/update/`, todo, this.httpOptions)
-      .subscribe({
-        error: (err) => console.log(err),
-        complete: () =>
-          console.log(
-            `update success - id: ${todo.Id} - IsComplete: ${todo.IsComplete}`
-          ),
-      });
+  modifyTodoItem(todo: Todo): Observable<Todo> {
+    return this.http.put<Todo>(
+      `${this.apiUrl}/update/`,
+      todo,
+      this.httpOptions
+    );
   }
-  modifyCompletedStatus(id: string, isComplete: boolean): void {
-    this.http
-      .put<Todo>(`${this.apiUrl}/${id}/${isComplete}`, this.httpOptions)
-      .subscribe({
-        error: (err) =>
-          console.error(`Change complete status error:  + ${{ err }}`),
-        complete: () => console.log(`update success status: ${isComplete}`),
-      });
+  modifyCompletedStatus(id: string, isComplete: boolean): Observable<Todo> {
+    return this.http.put<Todo>(
+      `${this.apiUrl}/${id}/${isComplete}`,
+      this.httpOptions
+    );
   }
 
-  deleteTodoItem(id: string) {
-    this.http
-      .delete<Todo>(`${this.apiUrl}/delete/?id=${id}`, this.httpOptions)
-      .subscribe({
-        error: (err) => console.log(`Error on Delete Item ${err}`),
-        complete: () => {
-          console.log(`delete Done on Id: ${id}`);
-        },
-      });
+  deleteTodoItem(id: string): Observable<any> {
+    return this.http.delete<Todo>(
+      `${this.apiUrl}/delete/?id=${id}`,
+      this.httpOptions
+    );
+  }
+  searchTodoItem(search: string): Observable<any> {
+    return this.http.get<Todo[]>(
+      `${this.apiUrl}/search/${search}`,
+      this.httpOptions
+    );
   }
 }

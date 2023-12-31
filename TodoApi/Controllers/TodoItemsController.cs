@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Interfaces;
@@ -18,14 +17,11 @@ namespace TodoApi.Controllers
 
         // GET: api/TodoItems
         [HttpGet]
-
         public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
         {
             var x = await _todolist.GetAsync();
-            Console.WriteLine(x.ToList());
             return x;
         }
-
 
         // GET: api/TodoItems/5
         [HttpGet("{id}")]

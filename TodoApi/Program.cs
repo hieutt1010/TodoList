@@ -1,35 +1,29 @@
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson.Serialization;
 using TodoApi.Configurations;
-using TodoApi.Interfaces;
-using TodoApi.Models;
-using TodoApi.Services;
+using TodoApi.Context;
+using TodoApi.Core.Models.User;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+var services = builder.Services;
 
-// Add services to the container.
-builder.Services.Configure<DatabaseSettings>(
-    builder.Configuration.GetSection("TodoListDatabase")); // ** Database config
+services.AddGoogleAuthentication(configuration); // Authen with Google
+//services.UseMongoDb(configuration); // Config MongoDb
+var mongoDBSettings = configuration.GetSection("MongoDBSettings").Get<MongoDbSettings>();
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDBSettings"));
+services.AddDbContext<MongoDbContext>(options =>
+options.UseMongoDB(mongoDBSettings.ConnectionString ?? "", mongoDBSettings.DatabaseName ?? ""),
+    ServiceLifetime.Transient, ServiceLifetime.Singleton);
 
-builder.Services.AddSingleton<ITodoList, TodoListService>();
-builder.Services.AddControllers()
-    .AddJsonOptions(
-        options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+services.RegisterServices(); // DI
+services.AddCustomeCors(); // Cross-Origin 
 
+services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-var MyAllowSpecificOrigins = "Todo-List";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-    policy =>
-    {
-        policy.AllowAnyHeader();
-        policy.AllowAnyMethod();
-        policy.WithExposedHeaders("Access-Control-Allow-Origin");
-        policy.WithOrigins("http://localhost:4200", "https://localhost:7219");
-    });
-});
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,8 +32,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.AddCustomMiddleware();
 app.UseHttpsRedirection();
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors();
 app.UseAuthorization();
+app.UseAuthentication();
 app.MapControllers();
 app.Run();

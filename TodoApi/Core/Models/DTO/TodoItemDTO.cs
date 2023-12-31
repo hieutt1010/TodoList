@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using MongoDB.Bson;
 
 namespace TodoApi.Models.DTO
 {
@@ -9,6 +10,7 @@ namespace TodoApi.Models.DTO
         [Required]
         [JsonPropertyName("Description")]
         public string Name { get; set; } = string.Empty;
+        [JsonPropertyName("IsComplete")]
         public bool IsComplete { get; set; }
     }
 }

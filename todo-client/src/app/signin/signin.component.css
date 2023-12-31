@@ -1,0 +1,97 @@
+.signin-button {
+    font-family: system-ui;
+    display: flex;
+    justify-content: center;
+    padding-top: 10vh;
+
+    box-sizing: border-box;
+    font-size: 30px;
+    background: #ffffff;
+    color: #303030;
+}
+
+@keyframes show-signup-button {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: calc(1.3em + 28px);
+    }
+}
+
+@keyframes hide-signup-button {
+    from {
+        display: flex;
+        width: calc(1.3em + 28px);
+    }
+
+    to {
+        width: 0;
+        display: none;
+    }
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+
+    border-radius: 30px;
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid #303030;
+    transition: all 0.2s ease-in-out;
+
+    &:hover .signup-button {
+        display: flex;
+    }
+
+    &:has(.signin-button:hover) {
+        border: 1px solid #5997cd;
+    }
+
+    &:has(.signup-button:hover) {
+        border: 1px solid #5eb64a;
+    }
+
+    &:not(:hover) .signup-button {
+        animation: hide-signup-button 0.2s forwards;
+    }
+
+    .signin-button {
+        cursor: pointer;
+        border: unset;
+        padding: 10px 28px;
+        font-size: 1.1em;
+        border-radius: 30px 0 0 30px;
+        background-color: #ffffff;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            color: #ffffff;
+            background-color: #5997cd;
+        }
+    }
+
+    .signup-button {
+        cursor: pointer;
+        padding: 0;
+        border: unset;
+        display: none;
+        font-size: 1.3em;
+        border-radius: 0 30px 30px 0;
+        align-items: center;
+        justify-content: center;
+
+        width: calc(1.3em + 28px);
+        animation: show-signup-button 0.3s forwards;
+
+        background-color: #ffffff;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            color: #ffffff;
+            background-color: #5eb64a;
+        }
+    }
+}
